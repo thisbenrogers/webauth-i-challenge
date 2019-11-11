@@ -1,14 +1,14 @@
-const db = require('../data/dbconfig');
+const db = require('../data/dbconfig.js');
 
 module.exports = {
   find,
   findBy,
-  finById,
+  findById,
   add
 };
 
 function find() {
-  return blur('users').select('id', 'username');
+  return db('users').select('id', 'username');
 }
 
 function findBy(filter) {
