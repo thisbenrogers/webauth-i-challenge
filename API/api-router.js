@@ -33,6 +33,7 @@ router.post('/login', (req, res) => {
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
+        req.session.user = user;
         res.status(200).json({ message: `${user.username} is logged in` });
       } else {
         res.status(401).json({ mesage: "You shall not pass!"});
@@ -50,6 +51,20 @@ router.get('/users', requiresAuth, (req, res) => {
       res.json(users);
     })
     .catch(err => res.send(err));
+})
+
+router.get('/logout', (req, res) => {
+  if (req.session) {
+    req.session.destroy(err => {
+      if (err) {
+        res.json({ message: "We couldn't log you out." })
+      } else {
+        res.status(200).json({ message: "Logout successful" })
+      }
+    })
+  } else {
+    res.status(200).json({ message: "You were never here" })
+  }
 })
 
 module.exports = router;
